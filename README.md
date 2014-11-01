@@ -1,17 +1,17 @@
-Opauth-Harvest
+Opauth-Dropbox
 =============
-[Opauth][1] strategy for Harvest authentication.
+[Opauth][1] strategy for Dropbox authentication.
 
-Implemented based on https://github.com/harvesthq/api
+Implemented based on https://www.dropbox.com/developers/blog/45/using-oauth-20-with-the-core-api
 
 Getting started
 ----------------
-1. Install Opauth-Harvest:
+1. Install Opauth-Dropbox:
 
    Using git:
    ```bash
    cd path_to_opauth/Strategy
-   git clone https://github.com/t1mmen/opauth-harvest.git Harvest
+   git clone https://github.com/t1mmen/opauth-dropbox.git Dropbox
    ```
 
   Or, using [Composer](https://getcomposer.org/), just add this to your `composer.json`:
@@ -19,18 +19,18 @@ Getting started
    ```bash
    {
        "require": {
-           "t1mmen/opauth-harvest": "*"
+           "t1mmen/opauth-dropbox": "*"
        }
    }
    ```
    Then run `composer install`.
 
 
-2. Create Harvest application at https://platform.harvestapp.com/oauth2_clients
+2. Create Dropbox application at https://www.dropbox.com/developers
 
-3. Configure Opauth-Harvest strategy with at least `Client ID` and `Client Secret`.
+3. Configure Opauth-Dropbox strategy with at least `Client ID` and `Client Secret`.
 
-4. Direct user to `http://path_to_opauth/harvest` to authenticate
+4. Direct user to `http://path_to_opauth/dropbox` to authenticate
 
 Strategy configuration
 ----------------------
@@ -39,7 +39,7 @@ Required parameters:
 
 ```php
 <?php
-'Harvest' => array(
+'Dropbox' => array(
 	'client_id' => 'YOUR CLIENT ID',
 	'client_secret' => 'YOUR CLIENT SECRET'
 )
@@ -47,7 +47,7 @@ Required parameters:
 
 License
 ---------
-Opauth-Harvest is MIT Licensed
+Opauth-Dropbox is MIT Licensed
 Copyright © 2014 Timm Stokke (http://timm.stokke.me)
 
 [1]: https://github.com/opauth/opauth

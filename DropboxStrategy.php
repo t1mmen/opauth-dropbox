@@ -41,7 +41,7 @@ class DropboxStrategy extends OpauthStrategy {
 	 * Auth request
 	 */
 	public function request() {
-		$url = 'https://api.dropboxapp.com/oauth2/authorize';
+		$url = 'https://www.dropbox.com/1/oauth2/authorize';
 		$params = array(
 			'client_id' => $this->strategy['client_id'],
 			'redirect_uri' => $this->strategy['redirect_uri'],
@@ -61,12 +61,12 @@ class DropboxStrategy extends OpauthStrategy {
 	public function oauth2callback() {
 		if (array_key_exists('code', $_GET) && !empty($_GET['code'])) {
 			$code = $_GET['code'];
-			$url = 'https://api.dropboxapp.com/oauth2/token';
+			$url = 'https://api.dropbox.com/1/oauth2/token';
 
 			$params = array(
-				'code' => $code,
 				'client_id' => $this->strategy['client_id'],
 				'client_secret' => $this->strategy['client_secret'],
+				'code' => $code,
 				'redirect_uri' => $this->strategy['redirect_uri'],
 				'grant_type' => 'authorization_code',
 			);
@@ -80,23 +80,16 @@ class DropboxStrategy extends OpauthStrategy {
 				$user = $this->user($results['access_token']);
 
 				$this->auth = array(
-					'uid' => $user['user']['id'],
-					'info' => array(
-						'name' => $user['user']['first_name'].' '.$user['user']['last_name'],
-						'image' => $user['company']['base_uri'].$user['user']['avatar_url'],
-					),
+					'uid' => $user['uid'],
+					'info' => array(),
 					'credentials' => array(
 						'token' => $results['access_token'],
-						'refresh_token' =>  $results['refresh_token'],
-						'expires_in' =>  $results['expires_in'],
 					),
 					'raw' => $user
 				);
 
-				$this->mapProfile($user, 'user.first_name', 'info.first_name'); // look into setting full name here
-				$this->mapProfile($user, 'user.last_name', 'info.last_name');
-				$this->mapProfile($user, 'user.email', 'info.email');
-				$this->mapProfile($user, 'company.base_uri', 'info.urls.base_uri');
+				$this->mapProfile($user, 'display_name', 'info.name'); // look into setting full name here
+				$this->mapProfile($user, 'email', 'info.email');
 
 				$this->callback();
 			}
@@ -126,16 +119,12 @@ class DropboxStrategy extends OpauthStrategy {
 	/**
 	 * Queries Dropbox API for user info
 	 *
-	 * @link         https://github.com/dropboxhq/api/blob/master/Authentication/OAuth%202.0.md#for-server-side-applications
 	 * @param string $access_token
 	 * @return array Parsed JSON results
 	 */
 	private function user($access_token) {
 
-		$options['http']['header'] = "Content-Type: application/json";
-		$options['http']['header'] .= "\r\nAccept: application/json";
-
-		$user = $this->serverGet('https://api.dropboxapp.com/account/who_am_i', array('access_token' => $access_token), $options, $headers);
+		$user = $this->serverGet('https://api.dropbox.com/1/account/info', array('access_token' => $access_token), null, $headers);
 
 		if (!empty($user)) {
 			return $this->recursiveGetObjectVars(json_decode($user));
